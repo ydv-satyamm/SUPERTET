@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+  <title>SUPERTET CLASS NOTES - Study Portal</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: #0d1117;
+      color: #f0f6fc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fixed Watermark */
+    .watermark {
+      position: fixed;
+      bottom: 12px;
+      right: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(245, 158, 11, 0.45);
+      pointer-events: none;
+      z-index: 999;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+    }
+
+    /* =========================================================
+       WELCOME / INTRODUCTION MODAL PROMPT
+       ========================================================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 14px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(88, 166, 255, 0.2);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      background: #090d13;
+      padding: 14px 18px;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 17px;
+      color: #58a6ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close-icon {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #8b949e;
+      border-radius: 6px;
+      font-size: 16px;
+      padding: 4px 10px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-close-icon:hover {
+      color: #f0f6fc;
+      background: #30363d;
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #c9d1d9;
+    }
+
+    .modal-body h3 {
+      font-size: 16px;
+      color: #f0f6fc;
+      margin: 16px 0 8px 0;
+      border-bottom: 1px solid #21262d;
+      padding-bottom: 4px;
+    }
+
+    .modal-body p {
+      margin-bottom: 10px;
+    }
+
+    .modal-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      background: #0d1117;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #30363d;
+    }
+
+    .modal-table th, .modal-table td {
+      padding: 10px 14px;
+      border: 1px solid #21262d;
+      text-align: left;
+    }
+
+    .modal-table th {
+      background: #1f2937;
+      color: #58a6ff;
+      font-weight: 600;
+    }
+
+    .modal-divider {
+      border: none;
+      height: 1px;
+      background: #30363d;
+      margin: 18px 0;
+    }
+
+    .highlight-box {
+      background: #0d1117;
+      border-left: 4px solid #f59e0b;
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 12px 0;
+    }
+
+    .modal-footer {
+      background: #090d13;
+      padding: 12px 18px;
+      border-top: 1px solid #30363d;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-agree {
+      background: #238636;
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-agree:hover {
+      background: #2ea043;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* =========================================================
+       TOP STICKY PDF VIEWER (65vh, FULL WIDTH)
+       ========================================================= */
+    .viewer-wrapper {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 65vh;
+      background-color: #0d1117;
+      border-bottom: 2px solid #30363d;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+      transition: height 0.2s ease;
+    }
+
+    .viewer-wrapper:fullscreen,
+    .viewer-wrapper:-webkit-full-screen {
+      height: 100vh !important;
+      width: 100vw !important;
+      max-width: 100% !important;
+      border-bottom: none;
+    }
+
+    .viewer-wrapper.fullscreen-mode {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100% !important;
+      z-index: 99999 !important;
+      border-bottom: none;
+    }
+
+    .viewer-header {
+      padding: 6px 14px;
+      background: #090d13;
+      font-size: 12.5px;
+      color: #58a6ff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #21262d;
+      flex-shrink: 0;
+      cursor: default;
+      gap: 8px;
+    }
+
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    #viewingTitle {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .offline-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(35, 134, 54, 0.2);
+      border: 1px solid #2ea043;
+      color: #3fb950;
+      white-space: nowrap;
+      display: none;
+      flex-shrink: 0;
+    }
+
+    .offline-pill.saving {
+      background: rgba(210, 153, 34, 0.2);
+      border-color: #d29922;
+      color: #e3b341;
+      display: inline-block;
+    }
+
+    .offline-pill.ready {
+      display: inline-block;
+    }
+
+    .zoom-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .zoom-btn {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .zoom-btn:hover {
+      background: #30363d;
+      color: #58a6ff;
+    }
+
+    .zoom-btn.active-btn {
+      background: #1f2937;
+      border-color: #58a6ff;
+      color: #58a6ff;
+    }
+
+    .zoom-level {
+      font-size: 11px;
+      color: #8b949e;
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .iframe-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background-color: #0d1117;
+      overflow: hidden;
+      touch-action: pan-y pinch-zoom;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .viewer-wrapper.dark-pdf-active,
+    .viewer-wrapper.dark-pdf-active .iframe-container,
+    .viewer-wrapper.dark-pdf-active .zoomable-layer {
+      background-color: #000000 !important;
+    }
+
+    .zoomable-layer {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+      will-change: transform;
+      background-color: #0d1117;
+    }
+
+    iframe {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: auto;
+      background-color: transparent;
+      transition: filter 0.25s ease;
+      touch-action: pan-y pinch-zoom;
+    }
+
+    /* PDF Dark Mode Filter */
+    iframe.pdf-dark-mode {
+      filter: invert(0.92) hue-rotate(180deg) contrast(1.15) brightness(0.95);
+      mix-blend-mode: screen;
+      background: #000000;
+    }
+
+    .touch-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: none;
+      pointer-events: none;
+    }
+
+    .touch-overlay.active-touch {
+      pointer-events: auto;
+    }
+
+    .placeholder-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8b949e;
+      font-size: 13.5px;
+      text-align: center;
+      padding: 20px;
+      z-index: 2;
+    }
+
+    .protection-shield {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60px;
+      height: 60px;
+      z-index: 10;
+      background: transparent;
+    }
+
+    /* =========================================================
+       FULLSCREEN PREV / NEXT & OVER-PREV ZOOM CONTROLS
+       ========================================================= */
+    .fs-nav-btn {
+      display: none;
+      position: absolute;
+      bottom: 18px;
+      z-index: 70;
+      background: rgba(22, 27, 34, 0.9);
+      color: #f0f6fc;
+      border: 1px solid #388bfd66;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(88, 166, 255, 0.2);
+      transition: all 0.15s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .fs-nav-btn:hover:not(:disabled) {
+      background: #21262d;
+      border-color: #58a6ff;
+      color: #58a6ff;
+      transform: translateY(-2px);
+    }
+
+    .fs-nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+      border-color: #30363d;
+    }
+
+    .fs-nav-prev { left: 18px; }
+    .fs-nav-next { right: 18px; }
+
+    .fs-zoom-stack {
+      display: none;
+      position: absolute;
+      bottom: 66px;
+      left: 18px;
+      z-index: 70;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .fs-zoom-btn {
+      background: rgba(22, 27, 34, 0.9);
+      color: #f0f6fc;
+      border: 1px solid #388bfd66;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+      transition: all 0.15s ease;
+    }
+
+    .fs-zoom-btn:hover {
+      background: #21262d;
+      border-color: #58a6ff;
+      color: #58a6ff;
+      transform: scale(1.06);
+    }
+
+    .viewer-wrapper:fullscreen .fs-nav-btn,
+    .viewer-wrapper:fullscreen .fs-zoom-stack,
+    .viewer-wrapper:-webkit-full-screen .fs-nav-btn,
+    .viewer-wrapper:-webkit-full-screen .fs-zoom-stack,
+    .viewer-wrapper.fullscreen-mode .fs-nav-btn,
+    .viewer-wrapper.fullscreen-mode .fs-zoom-stack {
+      display: flex;
+    }
+
+    /* =========================================================
+       BOTTOM CHAPTERS AREA (COMPACT)
+       ========================================================= */
+    .content-area {
+      flex: 1;
+      padding: 12px 12px 50px 12px;
+      max-width: 640px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #f0f6fc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.4px;
+    }
+
+    .offline-counter {
+      font-size: 11px;
+      color: #3fb950;
+      background: rgba(35, 134, 54, 0.15);
+      border: 1px solid rgba(46, 160, 67, 0.4);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .set-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .set-card {
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .set-card.active {
+      border-color: #58a6ff;
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
+    }
+
+    .set-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .set-header:hover {
+      background: #21262d;
+    }
+
+    .set-index {
+      font-size: 13px;
+      font-weight: 700;
+      color: #6e7681;
+      font-variant-numeric: tabular-nums;
+      min-width: 28px;
+    }
+
+    .set-card.active .set-index {
+      color: #58a6ff;
+    }
+
+    .set-name {
+      flex: 1;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #e6edf3;
+      letter-spacing: 0.3px;
+      line-height: 1.35;
+    }
+
+    .set-icon {
+      font-size: 11px;
+      color: #8b949e;
+      transition: transform 0.3s ease;
+    }
+
+    .set-card.active .set-icon {
+      transform: rotate(180deg);
+      color: #58a6ff;
+    }
+
+    .set-dropdown {
+      display: none;
+      background: #0d1117;
+      border-top: 1px solid #21262d;
+      padding: 6px 8px;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .set-card.active .set-dropdown {
+      display: flex;
+    }
+
+    .doc-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: #161b22;
+      border: 1px solid #21262d;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #c9d1d9;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .doc-link:hover {
+      background: #21262d;
+      color: #58a6ff;
+      border-color: #388bfd33;
+    }
+
+    .doc-link.active-item {
+      background: #1f2937;
+      border-color: #58a6ff;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .doc-title-text {
+      flex: 1;
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .badge-class { background: #238636; color: #ffffff; }
+    .badge-ai { background: #8957e5; color: #ffffff; }
+
+    .saved-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(46, 160, 67, 0.18);
+      border: 1px solid rgba(46, 160, 67, 0.5);
+      color: #3fb950;
+      font-weight: 700;
+      flex-shrink: 0;
+      display: none;
+    }
+
+    .doc-link.is-cached .saved-tag {
+      display: inline-block;
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+
+  <!-- Prompt Modal on Page Open -->
+  <div class="modal-overlay" id="welcomeModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>📚 SUPERTET PREPRATION</h2>
+        <button class="modal-close-icon" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <h3 style="color: #58a6ff; border: none; font-size: 17px; margin-top:0;">🎯 UP SuperTET 2026 CDP — Chapterwise Notes</h3>
+        
+        <h3 style="color: #e6edf3;">📝 1. SUPERTET CLASS NOTES की मुख्य विशेषताएँ</h3>
+        <p>📌 नवीनतम पाठ्यक्रम एवं परीक्षा पैटर्न पर आधारित महत्वपूर्ण अध्यायवार नोट्स।</p>
+        <p>📖 प्रत्येक अध्याय के लिए Class Notes एवं AI Revision Notes उपलब्ध हैं।</p>
+        <p>⚡ <strong>Smart Offline Mode:</strong> एक बार कोई PDF पूरा लोड होने पर वह आपके ब्राउज़र में सुरक्षित (Offline Save) हो जाता है, जिससे दोबारा खोलने पर तुरंत खुलता है।</p>
+
+        <hr class="modal-divider">
+
+        <h3 style="color: #e6edf3;">⏰ 📅 Study Resources</h3>
+        <table class="modal-table">
+          <thead>
+            <tr>
+              <th>📚 Resource</th>
+              <th>📝 Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>📗 Class Notes</td>
+              <td>Complete Handwritten / Classroom Notes</td>
+            </tr>
+            <tr>
+              <td>🤖 AI Notes</td>
+              <td>Structured Quick-Revision Notes & Handbook</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr class="modal-divider">
+
+        <h3 style="color: #e6edf3;">📖 2. How to Read SUPERTET CLASS NOTES</h3>
+        <p style="color: #f59e0b; font-weight:600;">🚀 7 सबसे असरदार और Advanced Level Smart Study Tricks</p>
+
+        <p><strong>1️⃣ 🔦 Highlight → ज़रूरी चीज़ों पर फोकस करें</strong><br>
+        🔹 पूरी लाइन को Highlight न करें — सिर्फ Dates, Names, Definitions, Numbers और Important Facts को Highlight करें।</p>
+
+        <hr class="modal-divider">
+
+        <p><strong>2️⃣ 📖 Read → पहली बार समझकर पढ़ें</strong><br>
+        🔹 धीरे-धीरे पढ़ें और हर Paragraph के बाद खुद से पूछें: 💭 <em>"मैंने अभी क्या पढ़ा?"</em></p>
+
+        <hr class="modal-divider">
+
+        <p><strong>3️⃣ 🔄 Interleaving → अलग-अलग विषयों को मिलाकर पढ़ें</strong><br>
+        🕐 30 मिनट — बाल विकास (CDP) • 🕐 30 मिनट — शिक्षण कौशल • 🕐 30 मिनट — जीवन कौशल</p>
+
+        <hr class="modal-divider">
+
+        <p><strong>4️⃣ 👁️ Visual Learning → दिमाग "दृश्य" से तेज़ सीखता है</strong><br>
+        🧠 Mind Maps, 📊 Flowcharts और 🖼️ Diagrams का उपयोग करें।</p>
+
+        <hr class="modal-divider">
+
+        <p><strong>5️⃣ ❤️ Emotion से जोड़ें → भावनाओं के साथ याद करें</strong><br>
+        🔹 हर सिद्धांत और मनोवैज्ञानिक के साथ कोई उदाहरण या Association जोड़ें।</p>
+
+        <hr class="modal-divider">
+
+        <p><strong>6️⃣ 🧪 Retrieval Practice → खुद से लगातार Test लें</strong><br>
+        📝 हर Topic पढ़ने के बाद उसी Topic का MCQ Set लगाएं।</p>
+
+        <hr class="modal-divider">
+
+        <p><strong>7️⃣ 🔁 Revise → बार-बार दोहराना जरूरी है</strong><br>
+        🟢 Day 1 → पहली बार पढ़ें • 🔵 Day 2 → पहला Revision • 🟠 Day 7 → दूसरा Revision • 🔴 Day 15 → Final Revision</p>
+
+        <hr class="modal-divider">
+
+        <div class="highlight-box">
+          <h4 style="color: #fbbf24; margin-bottom: 6px;">🏆 याद रखें!</h4>
+          <p style="margin-bottom: 4px;"><strong>📚 Study + Practice + Revision = Selection</strong></p>
+          <p style="margin-bottom: 0;">🔥 रोज़ एक कदम आगे बढ़ें। • 🎯 रोज़ Practice करें। • 🧠 Smart तरीके से पढ़ें। • 🔁 नियमित Revision करें।</p>
+        </div>
+
+        <p style="text-align: center; color: #58a6ff; font-weight: 700; margin: 12px 0;">
+          ⚡ "पढ़ाई खुद की, Planning हमारी — ⚡ Powered by 𓊈 ꕶ𝐚𐍄ꪗ𝓪𝓂 𓊉 🚩<br>
+          यही है Self-Study CONTENT की असली ताकत!" 🚩
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-agree" onclick="closeModal()">🚀 समझ गया / Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Watermark -->
+  <div class="watermark">⚡ Powered by 𓊈 ꕶ𝐚𐍄ꪗ𝓪𝓂 𓊉 🚩</div>
+
+  <!-- Top Sticky PDF Viewer -->
+  <div class="viewer-wrapper" id="viewerWrapper">
+    <div class="viewer-header" id="viewerHeader">
+      <div class="title-group">
+        <span id="viewingTitle">PDF Preview</span>
+        <span class="offline-pill" id="offlineBadge">⚡ Offline Ready</span>
+      </div>
+      <div class="zoom-toolbar">
+        <button class="zoom-btn" id="btnClearCache" title="Clear Saved Offline PDFs">🗑️</button>
+        <button class="zoom-btn" id="btnThemeToggle" title="🌛 Dark Mode / ☀️ Normal Mode">🌛/☀️</button>
+        <button class="zoom-btn" id="btnFullscreen" title="Fullscreen (Click / Double Tap)">⛶</button>
+        <button class="zoom-btn" id="btnZoomOut" title="Zoom Out">−</button>
+        <span class="zoom-level" id="zoomDisplay">100%</span>
+        <button class="zoom-btn" id="btnZoomIn" title="Zoom In">+</button>
+        <button class="zoom-btn" id="btnZoomReset" title="Reset Zoom">↺</button>
+      </div>
+    </div>
+    <div class="iframe-container" id="zoomViewport">
+      <div class="protection-shield"></div>
+      <div class="placeholder-text" id="placeholder">
+        नीचे दिए गए किसी भी अध्याय (Chapter) पर क्लिक करें और Class Notes या AI Notes लोड करें
+      </div>
+      <div class="zoomable-layer" id="zoomLayer">
+        <div class="touch-overlay" id="touchOverlay"></div>
+        <iframe id="pdfFrame" src="" style="display: none;" loading="eager"></iframe>
+      </div>
+
+      <!-- Floating Zoom Controls in Fullscreen -->
+      <div class="fs-zoom-stack">
+        <button class="fs-zoom-btn" id="btnFsZoomIn" title="Zoom In">+</button>
+        <button class="fs-zoom-btn" id="btnFsZoomReset" title="Reset Zoom">↺</button>
+        <button class="fs-zoom-btn" id="btnFsZoomOut" title="Zoom Out">−</button>
+      </div>
+
+      <!-- Fullscreen Navigation Buttons -->
+      <button class="fs-nav-btn fs-nav-prev" id="btnPrevPdf" title="Previous PDF">◀ Prev PDF</button>
+      <button class="fs-nav-btn fs-nav-next" id="btnNextPdf" title="Next PDF">Next PDF ▶</button>
+    </div>
+  </div>
+
+  <!-- Content / Chapters List -->
+  <div class="content-area">
+    <div class="section-header-row">
+      <div class="section-title">
+        <span>📚</span>
+        <span>UP SUPERTET 2026 CDP NOTES</span>
+      </div>
+      <span class="offline-counter" id="offlineCounter">⚡ 0 Saved Offline</span>
+    </div>
+
+    <div class="set-accordion" id="accordionContainer"></div>
+  </div>
+
+  <script>
+    // Close Welcome Modal
+    function closeModal() {
+      const modal = document.getElementById('welcomeModal');
+      modal.style.opacity = '0';
+      modal.style.transition = 'opacity 0.25s ease';
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 250);
+    }
+
+    const chaptersData = [
+      {
+        ch: "01",
+        name: "Individual Differences (वैयक्तिक विभिन्नता)",
+        classNotesId: "1ZU5UVJD1iVyqvgsaLtXzl6YQQex1SG9s",
+        aiNotesId: "1PijqSSo2CLyblMzwks8j9quX3mQaTp9Z"
+      },
+      {
+        ch: "02",
+        name: "Inclusive Education (समावेशी शिक्षा)",
+        classNotesId: "1UMS7dOdnuMPi5FvrmTk4WSixZQr8GM_-",
+        aiNotesId: "17VtjMLiQJX5GnNRnd6h_PjMqB3WZo7M-"
+      },
+      {
+        ch: "03",
+        name: "Educational Evaluation & Measurement (शैक्षिक मूल्यांकन एवं मापन)",
+        classNotesId: "1O6LfspbxWh4xBRGNa0tLCrMcaqG2t7vU",
+        aiNotesId: "1UPovt69OaWryATfFcJ7BM_nayZZWHP9D"
+      },
+      {
+        ch: "04",
+        name: "Assessment & Evaluation (आकलन एवं मूल्यांकन)",
+        classNotesId: "15ig9V6k-D5GRyi_PhLOxH9CYcXMHr7Wl",
+        aiNotesId: "1R_rQdSAC9ALrIauefi9y95ts_BMGJvDa"
+      },
+      {
+        ch: "05",
+        name: "Educational Management (शैक्षिक प्रबंधन)",
+        classNotesId: "17YLO2kMcq4uyZvb21DdEuM99d5NWhPVG",
+        aiNotesId: "1BHILqu6JYWZ4_GXLVefRcUdrSyekWMFR"
+      },
+      {
+        ch: "06",
+        name: "Teacher (शिक्षक)",
+        classNotesId: "1JVFtSHEralBGeOEleqE5TnsGNKO9hcGr",
+        aiNotesId: "1xJGJNpl-Uj7uTG1XXTlu9a-Aw9njnXPh"
+      },
+      {
+        ch: "07",
+        name: "Guidance and Counselling (मार्गदर्शन और परामर्श)",
+        classNotesId: "1CdkLWQMVR4TDve1C--3T2uwuq0QMvD9A",
+        aiNotesId: "12Tr1Yh-I5xJl2cYfYuesx7NnLqRiTVzi"
+      },
+      {
+        ch: "08",
+        name: "Early Reading Skills (आरंभिक पठन कौशल)",
+        classNotesId: "1FpnTmp4kCpmZgukH6APbLKW6rIDpy35q",
+        aiNotesId: "1U-Gr9jRKeVLU5owsZUYR9O0qw5k66pE9"
+      },
+      {
+        ch: "09",
+        name: "Education (शिक्षा)",
+        classNotesId: "1y9IygKDHt5uShievDdi3qd7Ek9sSbSrA",
+        aiNotesId: "1Cu6LLwWZWvXIiO762qtrbJEKIQSBxihl"
+      },
+      {
+        ch: "10",
+        name: "Teaching (शिक्षण)",
+        classNotesId: "1d4zB5PyoT6jfx_H0_ZSbsBK0hqhdUrDH",
+        aiNotesId: "1pepHMzQ-q25TlGdgVvxG5ztjzVE5cfoB"
+      },
+      {
+        ch: "11",
+        name: "Constitutional Articles (संवैधानिक प्रावधान)",
+        classNotesId: "1JQVAvR1awAxSVQh51CGes15MGOTaWCwP",
+        aiNotesId: "1FmWF-0ZnX89DnN_gaOLntlV3DaI4sFq6"
+      },
+      {
+        ch: "12",
+        name: "RTE Act 2009 (शिक्षा का अधिकार अधिनियम)",
+        classNotesId: "1BDXCcH_TfnJPAyam_9HcQ3LgoZ66IoHg",
+        aiNotesId: "14kaSEkW06cyt2BUkSRyD8LgQdKYd9Nuz"
+      },
+      {
+        ch: "13",
+        name: "Learning (अधिगम)",
+        classNotesId: "1zPwiHAJ5fYLbbH3vKPNhKb5_j5bh6HC1",
+        aiNotesId: "1Onco0_98VPMlJz7LECaOAohOujOQSLOF"
+      },
+      {
+        ch: "14",
+        name: "Psychologists & Their Theories (मनोवैज्ञानिक एवं सिद्धांत)",
+        classNotesId: "1ndmqanGt-woNRxkvi1PiZinexl8CTqSs",
+        aiNotesId: "1uwUGDmHeuXiOARDN__MSD_zeXbyHrqpw"
+      },
+      {
+        ch: "15",
+        name: "Characteristics of Professional Ethics (व्यावसायिक नैतिकता)",
+        classNotesId: "1lB4DAQnUV2OV9fz734Un0bdC-q6SYOO6",
+        aiNotesId: "1iDhKb5IzN6L2S_ImWRqg8t7NLGMFfFQr"
+      },
+      {
+        ch: "16",
+        name: "Life Skills (जीवन कौशल)",
+        classNotesId: "1l08RGjghJ3GFKrgavDMPW06EfiY1ytpc",
+        aiNotesId: "1xOT9bFwTNdEJXmc_s1rxNLvVzywA_ZNJ"
+      },
+      {
+        ch: "17",
+        name: "Growth & Development (वृद्धि एवं विकास)",
+        classNotesId: "18A9890Cmxpy88flmeyvMfw_Kkw45xrMU",
+        aiNotesId: "1lbmTtWXHw6Fmnb5ftZUQcHk92gpI3NUH"
+      },
+      {
+        ch: "18",
+        name: "Motivation (अभिप्रेरणा)",
+        classNotesId: "1sLmJLOMb8GdS5xDh5mIVmSDjFhF46Vca",
+        aiNotesId: "1kq0Z-2m9SRlYY8xSthi6aNyNvfeLE3wJ"
+      },
+      {
+        ch: "HB",
+        name: "UP SuperTET Syllabus & Teaching Skills Marathon Handbook",
+        classNotesId: null,
+        aiNotesId: "1L48zpyhn_fS4PYwRrXQs2FA8-uMceC3T"
+      }
+    ];
+
+    /* =========================================================
+       INDEXED-DB OFFLINE PDF STORAGE ENGINE
+       ========================================================= */
+    const DB_NAME = 'SupertetOfflinePDF_DB';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'pdfs';
+    const activeBlobUrls = new Map();
+    const inProgressDownloads = new Set();
+
+    function openPdfDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    async function getOfflinePdfBlob(fileId) {
+      try {
+        const db = await openPdfDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const req = store.get(fileId);
+          req.onsuccess = () => resolve(req.result ? req.result.blob : null);
+          req.onerror = () => resolve(null);
+        });
+      } catch {
+        return null;
+      }
+    }
+
+    async function saveOfflinePdfBlob(fileId, blob) {
+      try {
+        const db = await openPdfDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          store.put({ id: fileId, blob: blob, savedAt: Date.now() });
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch {
+        return false;
+      }
+    }
+
+    async function getAllSavedIds() {
+      try {
+        const db = await openPdfDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const req = store.getAllKeys();
+          req.onsuccess = () => resolve(req.result || []);
+          req.onerror = () => resolve([]);
+        });
+      } catch {
+        return [];
+      }
+    }
+
+    async function clearAllOfflinePdfs() {
+      try {
+        const db = await openPdfDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          tx.objectStore(STORE_NAME).clear();
+          tx.oncomplete = () => {
+            activeBlobUrls.forEach((url) => URL.revokeObjectURL(url));
+            activeBlobUrls.clear();
+            resolve(true);
+          };
+        });
+      } catch {
+        return false;
+      }
+    }
+
+    // Fetch complete PDF binary in background and persist in IndexedDB
+    async function downloadAndCachePdf(fileId, isCurrentlyViewing = false) {
+      if (!fileId || inProgressDownloads.has(fileId)) return;
+      const existing = await getOfflinePdfBlob(fileId);
+      if (existing) {
+        markItemAsCached(fileId);
+        return;
+      }
+
+      inProgressDownloads.add(fileId);
+      if (isCurrentlyViewing) {
+        setBadgeStatus('saving', '⏳ Saving Offline...');
+      }
+
+      const endpoints = [
+        `https://drive.google.com/uc?export=download&id=${fileId}`,
+        `https://drive.usercontent.google.com/u/0/uc?id=${fileId}&export=download`
+      ];
+
+      let saved = false;
+      for (const url of endpoints) {
+        try {
+          const response = await fetch(url, { mode: 'cors', credentials: 'omit' });
+          if (response.ok) {
+            const contentType = response.headers.get('content-type') || '';
+            const blob = await response.blob();
+            // Ensure valid PDF payload (not an HTML virus-scan warning page)
+            if (blob.size > 1024 && (contentType.includes('pdf') || contentType.includes('octet-stream') || blob.type === 'application/pdf')) {
+              const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+              await saveOfflinePdfBlob(fileId, pdfBlob);
+              saved = true;
+              break;
+            }
+          }
+        } catch {
+          // Try next endpoint if CORS blocks direct fetch
+        }
+      }
+
+      inProgressDownloads.delete(fileId);
+
+      if (saved) {
+        markItemAsCached(fileId);
+        await refreshSavedBadges();
+        if (isCurrentlyViewing && currentDocIndex !== -1 && allDocumentsList[currentDocIndex]?.id === fileId) {
+          setBadgeStatus('ready', '⚡ Saved Offline');
+        }
+      } else if (isCurrentlyViewing) {
+        setBadgeStatus('none', '');
+      }
+    }
+
+    function setBadgeStatus(state, text) {
+      const badge = document.getElementById('offlineBadge');
+      badge.className = 'offline-pill';
+      if (state === 'saving') {
+        badge.classList.add('saving');
+        badge.textContent = text;
+      } else if (state === 'ready') {
+        badge.classList.add('ready');
+        badge.textContent = text;
+      }
+    }
+
+    function markItemAsCached(fileId) {
+      allDocumentsList.forEach((doc) => {
+        if (doc.id === fileId && doc.element) {
+          doc.element.classList.add('is-cached');
+        }
+      });
+    }
+
+    async function refreshSavedBadges() {
+      const savedIds = await getAllSavedIds();
+      const savedSet = new Set(savedIds);
+      allDocumentsList.forEach((doc) => {
+        if (doc.element) {
+          if (savedSet.has(doc.id)) {
+            doc.element.classList.add('is-cached');
+          } else {
+            doc.element.classList.remove('is-cached');
+          }
+        }
+      });
+      document.getElementById('offlineCounter').textContent = `⚡ ${savedSet.size} Saved Offline`;
+    }
+
+    // Register lightweight Cache-First Service Worker for static portal shell
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.protocol === 'http:')) {
+      const swCode = `
+        const CACHE_NAME = 'supertet-portal-v1';
+        self.addEventListener('install', (e) => self.skipWaiting());
+        self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
+        self.addEventListener('fetch', (e) => {
+          if (e.request.method !== 'GET') return;
+          e.respondWith(
+            caches.open(CACHE_NAME).then(async (cache) => {
+              const cached = await cache.match(e.request);
+              if (cached) return cached;
+              try {
+                const fresh = await fetch(e.request);
+                if (fresh && fresh.status === 200 && e.request.url.startsWith(self.location.origin)) {
+                  cache.put(e.request, fresh.clone());
+                }
+                return fresh;
+              } catch (err) {
+                return cached || Response.error();
+              }
+            })
+          );
+        });
+      `;
+      try {
+        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(swBlob);
+        navigator.serviceWorker.register(swUrl).catch(() => {});
+      } catch {}
+    }
+
+    /* =========================================================
+       UI & VIEWER CONTROLS
+       ========================================================= */
+    const container = document.getElementById('accordionContainer');
+    const iframe = document.getElementById('pdfFrame');
+    const placeholder = document.getElementById('placeholder');
+    const viewingTitle = document.getElementById('viewingTitle');
+    const btnThemeToggle = document.getElementById('btnThemeToggle');
+    const btnFullscreen = document.getElementById('btnFullscreen');
+    const btnClearCache = document.getElementById('btnClearCache');
+    const viewerWrapper = document.getElementById('viewerWrapper');
+    const viewerHeader = document.getElementById('viewerHeader');
+    const btnPrevPdf = document.getElementById('btnPrevPdf');
+    const btnNextPdf = document.getElementById('btnNextPdf');
+    const btnFsZoomIn = document.getElementById('btnFsZoomIn');
+    const btnFsZoomOut = document.getElementById('btnFsZoomOut');
+    const btnFsZoomReset = document.getElementById('btnFsZoomReset');
+
+    let isPdfDarkMode = false;
+    let allDocumentsList = [];
+    let currentDocIndex = -1;
+
+    // Clear Offline Cache Button
+    btnClearCache.addEventListener('click', async () => {
+      if (confirm('क्या आप ब्राउज़र में सेव किए गए सभी Offline PDFs को डिलीट करना चाहते हैं?')) {
+        await clearAllOfflinePdfs();
+        await refreshSavedBadges();
+        setBadgeStatus('none', '');
+        alert('सभी Offline PDF डेटा क्लियर कर दिए गए हैं।');
+      }
+    });
+
+    // Dark / Light Mode Toggle for PDF
+    btnThemeToggle.addEventListener('click', () => {
+      isPdfDarkMode = !isPdfDarkMode;
+      if (isPdfDarkMode) {
+        iframe.classList.add('pdf-dark-mode');
+        viewerWrapper.classList.add('dark-pdf-active');
+        btnThemeToggle.classList.add('active-btn');
+      } else {
+        iframe.classList.remove('pdf-dark-mode');
+        viewerWrapper.classList.remove('dark-pdf-active');
+        btnThemeToggle.classList.remove('active-btn');
+      }
+    });
+
+    // Fullscreen Toggle Logic
+    function isCurrentlyFullscreen() {
+      return !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        viewerWrapper.classList.contains('fullscreen-mode')
+      );
+    }
+
+    function toggleFullscreen() {
+      const active = isCurrentlyFullscreen();
+
+      if (!active) {
+        if (viewerWrapper.requestFullscreen) {
+          viewerWrapper.requestFullscreen().catch(() => {
+            viewerWrapper.classList.add('fullscreen-mode');
+          });
+        } else if (viewerWrapper.webkitRequestFullscreen) {
+          viewerWrapper.webkitRequestFullscreen();
+        } else {
+          viewerWrapper.classList.add('fullscreen-mode');
+        }
+        btnFullscreen.classList.add('active-btn');
+      } else {
+        if (document.exitFullscreen && document.fullscreenElement) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen && document.webkitFullscreenElement) {
+          document.webkitExitFullscreen();
+        }
+        viewerWrapper.classList.remove('fullscreen-mode');
+        btnFullscreen.classList.remove('active-btn');
+      }
+      updateNavButtons();
+    }
+
+    ['fullscreenchange', 'webkitfullscreenchange'].forEach(evt => {
+      document.addEventListener(evt, () => {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          viewerWrapper.classList.remove('fullscreen-mode');
+          btnFullscreen.classList.remove('active-btn');
+        } else {
+          btnFullscreen.classList.add('active-btn');
+        }
+        updateNavButtons();
+      });
+    });
+
+    btnFullscreen.addEventListener('click', toggleFullscreen);
+
+    viewerHeader.addEventListener('dblclick', (e) => {
+      if (e.target.tagName !== 'BUTTON') {
+        toggleFullscreen();
+      }
+    });
+
+    let lastHeaderTap = 0;
+    viewerHeader.addEventListener('touchend', (e) => {
+      if (e.target.tagName === 'BUTTON') return;
+      const now = new Date().getTime();
+      if (now - lastHeaderTap < 320 && now - lastHeaderTap > 0) {
+        toggleFullscreen();
+        lastHeaderTap = 0;
+      } else {
+        lastHeaderTap = now;
+      }
+    });
+
+    // Build Chapter List
+    chaptersData.forEach((item, idx) => {
+      const cardId = `card-ch-${idx}`;
+      const card = document.createElement('div');
+      card.className = 'set-card';
+      card.id = cardId;
+
+      const header = document.createElement('div');
+      header.className = 'set-header';
+      header.onclick = () => toggleCard(cardId);
+
+      const indexLabel = item.ch === "HB" ? "📖" : item.ch;
+
+      header.innerHTML = `
+        <span class="set-index">${indexLabel}</span>
+        <span class="set-name">${item.name}</span>
+        <span class="set-icon">▼</span>
+      `;
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'set-dropdown';
+
+      const prefix = item.ch === "HB" ? "" : `Ch. ${item.ch} — `;
+
+      if (item.classNotesId) {
+        const classLink = createLink(`${prefix}Class Notes (${item.name})`, item.classNotesId, 'class', cardId);
+        dropdown.appendChild(classLink.element);
+        allDocumentsList.push(classLink.data);
+      }
+
+      if (item.aiNotesId) {
+        const aiLabel = item.ch === "HB" ? item.name : `${prefix}AI Notes (${item.name})`;
+        const aiLink = createLink(aiLabel, item.aiNotesId, 'ai', cardId);
+        dropdown.appendChild(aiLink.element);
+        allDocumentsList.push(aiLink.data);
+      }
+
+      card.appendChild(header);
+      card.appendChild(dropdown);
+      container.appendChild(card);
+    });
+
+    function createLink(title, id, type, cardId) {
+      const link = document.createElement('div');
+      link.className = 'doc-link';
+
+      const badgeClass = type === 'class' ? 'badge-class' : 'badge-ai';
+      const badgeText = type === 'class' ? 'CLASS NOTES' : 'AI NOTES';
+
+      link.innerHTML = `
+        <span class="badge ${badgeClass}">${badgeText}</span>
+        <span class="doc-title-text">${title}</span>
+        <span class="saved-tag">⚡ OFFLINE</span>
+      `;
+
+      const docItem = {
+        title,
+        id,
+        cardId,
+        element: link
+      };
+
+      link.onclick = (e) => {
+        e.stopPropagation();
+        const foundIndex = allDocumentsList.findIndex(d => d.id === id && d.title === title);
+        if (foundIndex !== -1) {
+          loadPdfByIndex(foundIndex);
+        }
+      };
+
+      return { element: link, data: docItem };
+    }
+
+    function toggleCard(cardId, forceOpen = false) {
+      const allCards = document.querySelectorAll('.set-card');
+      const targetCard = document.getElementById(cardId);
+      if (!targetCard) return;
+
+      const isAlreadyActive = targetCard.classList.contains('active');
+      allCards.forEach(c => c.classList.remove('active'));
+
+      if (forceOpen || !isAlreadyActive) {
+        targetCard.classList.add('active');
+      }
+    }
+
+    function updateNavButtons() {
+      btnPrevPdf.disabled = currentDocIndex <= 0;
+      btnNextPdf.disabled = currentDocIndex >= allDocumentsList.length - 1 || currentDocIndex === -1;
+    }
+
+    // Load PDF: Check IndexedDB Offline Storage FIRST, otherwise load online & cache in background
+    async function loadPdfByIndex(index) {
+      if (index < 0 || index >= allDocumentsList.length) return;
+      currentDocIndex = index;
+      const doc = allDocumentsList[index];
+
+      document.querySelectorAll('.doc-link').forEach(l => l.classList.remove('active-item'));
+      if (doc.element) {
+        doc.element.classList.add('active-item');
+      }
+
+      toggleCard(doc.cardId, true);
+
+      viewingTitle.innerText = `📄 ${doc.title}`;
+      placeholder.style.display = 'none';
+      iframe.style.display = 'block';
+      resetZoom();
+      updateNavButtons();
+
+      // 1. Check if already saved offline in browser IndexedDB
+      const cachedBlob = await getOfflinePdfBlob(doc.id);
+      if (cachedBlob) {
+        let blobUrl = activeBlobUrls.get(doc.id);
+        if (!blobUrl) {
+          blobUrl = URL.createObjectURL(cachedBlob);
+          activeBlobUrls.set(doc.id, blobUrl);
+        }
+        iframe.src = `${blobUrl}#toolbar=0&navpanes=0`;
+        setBadgeStatus('ready', '⚡ Loaded Offline');
+        markItemAsCached(doc.id);
+        return;
+      }
+
+      // 2. Load from Google Drive online and save full PDF offline once loaded
+      setBadgeStatus('none', '');
+      iframe.src = `https://drive.google.com/file/d/${doc.id}/preview`;
+
+      // Start background download & offline save after iframe finishes loading
+      iframe.onload = () => {
+        downloadAndCachePdf(doc.id, true);
+      };
+    }
+
+    btnPrevPdf.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentDocIndex > 0) {
+        loadPdfByIndex(currentDocIndex - 1);
+      }
+    });
+
+    btnNextPdf.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentDocIndex === -1) {
+        loadPdfByIndex(0);
+      } else if (currentDocIndex < allDocumentsList.length - 1) {
+        loadPdfByIndex(currentDocIndex + 1);
+      }
+    });
+
+    updateNavButtons();
+    refreshSavedBadges();
+
+    /* -------------------------------------------------------------
+       PINCH TO ZOOM & NON-BLOCKING SCROLL / PAN LOGIC
+       ------------------------------------------------------------- */
+    const zoomViewport = document.getElementById('zoomViewport');
+    const zoomLayer = document.getElementById('zoomLayer');
+    const touchOverlay = document.getElementById('touchOverlay');
+    const zoomDisplay = document.getElementById('zoomDisplay');
+
+    let scale = 1;
+    let minScale = 1;
+    let maxScale = 4;
+    let pointX = 0;
+    let pointY = 0;
+    let startPointX = 0;
+    let startPointY = 0;
+    let isPanning = false;
+    let initialDistance = 0;
+    let initialScale = 1;
+    let lastTap = 0;
+
+    function updateTransform() {
+      const rect = zoomViewport.getBoundingClientRect();
+      const maxTranslateX = 0;
+      const minTranslateX = rect.width * (1 - scale);
+      const maxTranslateY = 0;
+      const minTranslateY = rect.height * (1 - scale);
+
+      if (scale <= 1) {
+        pointX = 0;
+        pointY = 0;
+      } else {
+        pointX = Math.min(maxTranslateX, Math.max(minTranslateX, pointX));
+        pointY = Math.min(maxTranslateY, Math.max(minTranslateY, pointY));
+      }
+
+      zoomLayer.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+      zoomDisplay.innerText = `${Math.round(scale * 100)}%`;
+
+      if (scale > 1.05) {
+        touchOverlay.style.display = 'block';
+        touchOverlay.classList.add('active-touch');
+      } else {
+        touchOverlay.style.display = 'none';
+        touchOverlay.classList.remove('active-touch');
+      }
+    }
+
+    function setZoom(newScale, centerX, centerY) {
+      newScale = Math.min(Math.max(newScale, minScale), maxScale);
+      if (newScale === scale) return;
+
+      const rect = zoomViewport.getBoundingClientRect();
+      const cx = centerX !== undefined ? centerX - rect.left : rect.width / 2;
+      const cy = centerY !== undefined ? centerY - rect.top : rect.height / 2;
+
+      pointX = cx - (cx - pointX) * (newScale / scale);
+      pointY = cy - (cy - pointY) * (newScale / scale);
+      scale = newScale;
+
+      updateTransform();
+    }
+
+    function resetZoom() {
+      scale = 1;
+      pointX = 0;
+      pointY = 0;
+      updateTransform();
+    }
+
+    zoomViewport.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2) {
+        touchOverlay.style.display = 'block';
+        touchOverlay.classList.add('active-touch');
+        initialDistance = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        initialScale = scale;
+      } else if (e.touches.length === 1) {
+        const currentTime = new Date().getTime();
+        const tapInterval = currentTime - lastTap;
+        if (tapInterval < 300 && tapInterval > 0) {
+          if (scale > 1.2) {
+            resetZoom();
+          } else {
+            setZoom(2.2, e.touches[0].clientX, e.touches[0].clientY);
+          }
+          lastTap = 0;
+          e.preventDefault();
+          return;
+        }
+        lastTap = currentTime;
+
+        if (scale > 1) {
+          isPanning = true;
+          startPointX = e.touches[0].clientX - pointX;
+          startPointY = e.touches[0].clientY - pointY;
+        }
+      }
+    }, { passive: true });
+
+    zoomViewport.addEventListener('touchmove', function(e) {
+      if (e.touches.length === 2) {
+        if (e.cancelable) e.preventDefault();
+        const currentDistance = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+
+        if (initialDistance > 0) {
+          const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+          const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+          const targetScale = initialScale * (currentDistance / initialDistance);
+          setZoom(targetScale, midX, midY);
+        }
+      } else if (e.touches.length === 1 && isPanning && scale > 1) {
+        if (e.cancelable) e.preventDefault();
+        pointX = e.touches[0].clientX - startPointX;
+        pointY = e.touches[0].clientY - startPointY;
+        updateTransform();
+      }
+    }, { passive: false });
+
+    zoomViewport.addEventListener('touchend', function(e) {
+      if (e.touches.length < 2) {
+        initialDistance = 0;
+      }
+      if (e.touches.length === 0) {
+        isPanning = false;
+        if (scale <= 1.05) {
+          resetZoom();
+        }
+      }
+    }, { passive: true });
+
+    document.getElementById('btnZoomIn').addEventListener('click', () => setZoom(scale + 0.3));
+    document.getElementById('btnZoomOut').addEventListener('click', () => setZoom(scale - 0.3));
+    document.getElementById('btnZoomReset').addEventListener('click', () => resetZoom());
+
+    btnFsZoomIn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setZoom(scale + 0.3);
+    });
+    btnFsZoomOut.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setZoom(scale - 0.3);
+    });
+    btnFsZoomReset.addEventListener('click', (e) => {
+      e.stopPropagation();
+      resetZoom();
+    });
+
+    // Protection shortcut blockers
+    document.addEventListener('keydown', function (e) {
+      if (
+        (e.ctrlKey && (e.key === 's' || e.key === 'p' || e.key === 'u' || e.key === 'c')) ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        e.key === 'F12'
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  </script>
+</body>
+</html>
